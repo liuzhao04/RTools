@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/application/application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+   <top>
+      <TitledPane animated="false" text="集群参数" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="62.0" prefWidth="598.0">
+               <children>
+                  <Label layoutX="29.0" layoutY="23.0" text="集群选择：" />
+                  <ChoiceBox id="selCluster" fx:id="selCluster" layoutX="89.0" layoutY="19.0" prefWidth="150.0" />
+                  <Button id="btnMgrCluster" layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
+   </top>
+   <center>
+      <BorderPane fx:id="valuePane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <top>
+            <TitledPane animated="false" text="Content" BorderPane.alignment="CENTER">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="80.0" prefWidth="398.0">
+                     <children>
+                        <Label layoutX="22.0" layoutY="48.0" text="key : " />
+                        <Label layoutX="15.0" layoutY="13.0" text="type : " />
+                        <TextField fx:id="jtfKey" editable="false" layoutX="67.0" layoutY="44.0" prefHeight="23.0" prefWidth="240.0" />
+                        <TextField fx:id="jtfType" editable="false" layoutX="67.0" layoutY="9.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+         </top>
+      </BorderPane>
+   </center>
+   <left>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane prefHeight="335.0" prefWidth="265.0">
+               <top>
+                  <TextField id="jtfKeysFilter" fx:id="jtfKeysFilter" />
+               </top>
+               <center>
+                  <ListView id="listKeys" fx:id="listKeys" prefHeight="239.0" prefWidth="248.0" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+         </children>
+      </HBox>
+   </left>
+</BorderPane>
