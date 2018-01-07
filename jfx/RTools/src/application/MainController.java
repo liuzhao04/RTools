@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.aotain.rtools.common.IRedisOP;
+import com.aotain.rtools.common.RedisOpFactory;
 import com.aotain.rtools.common.RedisTypeConstant;
 import com.aotain.rtools.common.RedisUtils;
 import com.aotain.rtools.model.RedisConfig;
@@ -32,7 +34,8 @@ public class MainController implements Initializable {
 
 	private List<RedisConfig> rlist = null;
 
-	private RedisUtils rutils = null;
+//	private RedisUtils rutils = null;
+	private IRedisOP redisOP = null;
 
 	@FXML
 	private TextField jtfKeysFilter = null;
@@ -52,29 +55,35 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		rlist = new ArrayList<RedisConfig>();
+		String host0 = "192.168.31.20";
+		String port0 = "8888";
+		RedisConfig rc0 = new RedisConfig(host0, port0);
+		rc0.setId(1);
+		rc0.setName("UbuntuRedis");
+		rlist.add(rc0);
 		String host1 = "192.168.5.65,192.168.5.66,192.168.5.67,192.168.5.68,192.168.5.69,192.168.5.71";
 		String port1 = "7000,7000,7000,7000,7000,7000";
 		RedisConfig rc1 = new RedisConfig(host1, port1);
-		rc1.setId(1);
+		rc1.setId(2);
 		rc1.setName("研发集群");
 		String host2 = "192.168.5.65,192.168.5.66,192.168.5.67,192.168.5.68,192.168.5.69,192.168.5.71";
 		String port2 = "8000,8000,8000,8000,8000,8000";
 		RedisConfig rc2 = new RedisConfig(host2, port2);
-		rc2.setId(2);
+		rc2.setId(3);
 		rc2.setName("测试集群");
 		rlist.add(rc1);
 		rlist.add(rc2);
-		rutils = new RedisUtils(rc1.getIpStrs(), rc1.getPortStrs());
+		redisOP = RedisOpFactory.createIRedisOP(rc0.getIpStrs(), rc0.getPortStrs());
 		initKeysFilter();
 		resetClusterChoice();
 		selCluster.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				RedisConfig rc = getRedisConfigByIndex(newValue.intValue());
-				rutils.close();
+				redisOP.destory();
 				jtfKeysFilter.clear();
-				rutils = new RedisUtils(rc.getIpStrs(), rc.getPortStrs());
-				List<String> keys = rutils.fuzzyKeys(null);
+				redisOP = RedisOpFactory.createIRedisOP(rc.getIpStrs(), rc.getPortStrs());
+				List<String> keys = redisOP.keys(null);
 				ObservableList<String> strList = FXCollections.observableArrayList(keys);
 				listKeys.setItems(strList);
 			}
@@ -98,7 +107,7 @@ public class MainController implements Initializable {
 			return;
 		}
 		jtfKey.setText(newKey);
-		String type = rutils.type(newKey);
+		String type = redisOP.type(newKey);
 		jtfType.setText(type);
 
 		showValueByKeyType(newKey, type);
@@ -113,7 +122,7 @@ public class MainController implements Initializable {
 	private void showValueByKeyType(String key, String type) {
 		switch (type) {
 		case RedisTypeConstant.STRING:
-			Pane pane = ValueSceneFactory.createStringPanel(rutils,key);
+			Pane pane = ValueSceneFactory.createStringPanel(redisOP,key);
 			valuePane.setCenter(pane);
 			break;
 		case RedisTypeConstant.HASH:
@@ -146,13 +155,13 @@ public class MainController implements Initializable {
 	}
 
 	private void initKeysFilter() {
-		List<String> keys = rutils.fuzzyKeys(null);
+		List<String> keys = redisOP.keys(null);
 		ObservableList<String> strList = FXCollections.observableArrayList(keys);
 		listKeys.setItems(strList);
 		jtfKeysFilter.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				List<String> keys = rutils.fuzzyKeys(StringUtils.trim(newValue));
+				List<String> keys = redisOP.keys(StringUtils.trim(newValue));
 				ObservableList<String> strList = FXCollections.observableArrayList(keys);
 				listKeys.setItems(strList);
 			}
