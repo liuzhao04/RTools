@@ -68,7 +68,9 @@ public class RedisClusterOP implements IRedisOP {
 		List<String> keys = new ArrayList<String>();
 		if (keyName == null || "".equals(keyName.trim())) {
 			keys.addAll(matchKeys("*"));
+			return keys;
 		}
+		keyName = keyName.trim();
 		keys.addAll(matchKeys("*" + keyName + "*"));
 		return keys;
 	}
@@ -99,5 +101,21 @@ public class RedisClusterOP implements IRedisOP {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<String> hkeys(String key) {
+		List<String> keys = new ArrayList<String>();
+		if (key == null || "".equals(key.trim())) {
+			return keys;
+		}
+		key = key.trim();
+		keys.addAll(jc.hkeys(key));
+		return keys;
+	}
+
+	@Override
+	public String hget(String key, String field) {
+		return jc.hget(key, field);
 	}
 }

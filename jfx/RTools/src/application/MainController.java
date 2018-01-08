@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.aotain.rtools.common.IRedisOP;
 import com.aotain.rtools.common.RedisOpFactory;
 import com.aotain.rtools.common.RedisTypeConstant;
-import com.aotain.rtools.common.RedisUtils;
 import com.aotain.rtools.model.RedisConfig;
 
 import application.value.ValueSceneFactory;
@@ -73,7 +72,7 @@ public class MainController implements Initializable {
 		rc2.setName("测试集群");
 		rlist.add(rc1);
 		rlist.add(rc2);
-		redisOP = RedisOpFactory.createIRedisOP(rc0.getIpStrs(), rc0.getPortStrs());
+		redisOP = RedisOpFactory.createIRedisOP(rc1.getIpStrs(), rc1.getPortStrs());
 		initKeysFilter();
 		resetClusterChoice();
 		selCluster.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -126,6 +125,9 @@ public class MainController implements Initializable {
 			valuePane.setCenter(pane);
 			break;
 		case RedisTypeConstant.HASH:
+			 pane = ValueSceneFactory.createHashPanel(redisOP,key);
+			valuePane.setCenter(pane);
+			break;
 		case RedisTypeConstant.LIST:
 		case RedisTypeConstant.SET:
 		case RedisTypeConstant.ZSET:
@@ -139,7 +141,7 @@ public class MainController implements Initializable {
 	
 	private void resetClusterChoice() {
 		selCluster.setItems(rlistToModel());
-		selCluster.getSelectionModel().clearAndSelect(0);
+		selCluster.getSelectionModel().clearAndSelect(1);
 	}
 
 	private RedisConfig getRedisConfigByIndex(int index) {

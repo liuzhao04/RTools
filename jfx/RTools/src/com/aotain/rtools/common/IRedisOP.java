@@ -35,9 +35,25 @@ public interface IRedisOP {
 	public String get(String key);
 	
 	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public List<String> hkeys(String key);
+	
+	/**
 	 * 销毁操作对象
 	 * @return
 	 */
 	public void destory();
+
+	/**
+	 * 获取HashValue
+	 * @param key
+	 * @param field
+	 * @return
+	 */
+	public String hget(String key,String field);
+
 	
 }

@@ -31,6 +31,7 @@ public class RedisOP implements IRedisOP {
 		if (StringUtils.isBlank(keyName)) {
 			list.addAll(jedis.keys("*"));
 		} else {
+			keyName = keyName.trim();
 			list.addAll(jedis.keys("*" + keyName + "*"));
 		}
 		return list;
@@ -57,6 +58,23 @@ public class RedisOP implements IRedisOP {
 		if (jedis != null) {
 			jedis.close();
 		}
+	}
+
+	@Override
+	public List<String> hkeys(String key) {
+		List<String> list = new ArrayList<String>();
+		if (StringUtils.isBlank(key)) {
+			list.addAll(jedis.hkeys("*"));
+		} else {
+			key = key.trim();
+			list.addAll(jedis.hkeys("*" + key + "*"));
+		}
+		return list;
+	}
+
+	@Override
+	public String hget(String key, String field) {
+		return jedis.hget(key, field);
 	}
 
 }
