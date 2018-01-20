@@ -11,18 +11,26 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aotain.rtools.common.IRedisOP;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.MenuItemBuilder;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCombination.Modifier;
 
 /**
  * HashValue控制器
@@ -49,6 +57,12 @@ public class HashValueController implements Initializable {
 	@FXML
 	private RadioButton rbTextFormat;
 
+	@FXML
+	private MenuItem freshHKey;
+	
+	@FXML
+	private MenuItem freshHContent;
+	
 	private IRedisOP rutils;
 	private String key;
 
@@ -95,6 +109,25 @@ public class HashValueController implements Initializable {
 					String type = rb.getText();
 					showAsType(type);
 				}
+			}
+		});
+		freshHKey.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				hkeys = rutils.hkeys(key);
+				tfHkeyList.setItems(FXCollections.observableArrayList(hkeys));
+				List<String> keys = filterKeys(StringUtils.trim(tfHkeyFilter.getText()));
+				ObservableList<String> strList = FXCollections.observableArrayList(keys);
+				tfHkeyList.setItems(strList);
+			}
+		});
+		
+		freshHContent.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				String hkey = tfHkeyList.getSelectionModel().getSelectedItem();
+				changeKey(hkey, hkey);
 			}
 		});
 	}

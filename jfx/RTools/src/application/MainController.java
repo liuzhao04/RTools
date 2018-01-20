@@ -17,10 +17,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -50,6 +53,9 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private BorderPane valuePane = null;
+	
+	@FXML
+	private MenuItem freshKeyMenu;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -70,9 +76,10 @@ public class MainController implements Initializable {
 		RedisConfig rc2 = new RedisConfig(host2, port2);
 		rc2.setId(3);
 		rc2.setName("测试集群");
+		rlist.add(rc0);
 		rlist.add(rc1);
 		rlist.add(rc2);
-		redisOP = RedisOpFactory.createIRedisOP(rc1.getIpStrs(), rc1.getPortStrs());
+		redisOP = RedisOpFactory.createIRedisOP(rc0.getIpStrs(), rc0.getPortStrs());
 		initKeysFilter();
 		resetClusterChoice();
 		selCluster.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
@@ -91,6 +98,16 @@ public class MainController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				changeKey(oldValue, newValue);
+			}
+		});
+		
+		freshKeyMenu.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				String curVal = jtfKeysFilter.getText();
+				List<String> keys = redisOP.keys(StringUtils.trim(curVal));
+				ObservableList<String> strList = FXCollections.observableArrayList(keys);
+				listKeys.setItems(strList);
 			}
 		});
 	}

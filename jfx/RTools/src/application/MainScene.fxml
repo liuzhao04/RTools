@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
@@ -15,7 +16,7 @@
                <children>
                   <Label layoutX="29.0" layoutY="23.0" text="集群选择：" />
                   <ChoiceBox id="selCluster" fx:id="selCluster" layoutX="89.0" layoutY="19.0" prefWidth="150.0" />
-                  <Button id="btnMgrCluster" layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
+                  <Button id="btnMgrCluster" disable="true" layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
                </children>
             </AnchorPane>
         </content>
@@ -47,7 +48,14 @@
                   <TextField id="jtfKeysFilter" fx:id="jtfKeysFilter" />
                </top>
                <center>
-                  <ListView id="listKeys" fx:id="listKeys" prefHeight="239.0" prefWidth="248.0" BorderPane.alignment="CENTER" />
+                  <ListView id="listKeys" fx:id="listKeys" prefHeight="239.0" prefWidth="248.0" BorderPane.alignment="CENTER">
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem id="freshKeyMenu" fx:id="freshKeyMenu" text="刷新" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu></ListView>
                </center>
             </BorderPane>
          </children>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -25,16 +26,30 @@
                         <ToggleGroup fx:id="tgroup" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton disable="true" fx:id="rbJsonFormat" mnemonicParsing="false" text="json" toggleGroup="$tgroup" />
+                  <RadioButton fx:id="rbJsonFormat" disable="true" mnemonicParsing="false" text="json" toggleGroup="$tgroup" />
                </children>
             </FlowPane>
             <TextField fx:id="tfHkeyFilter">
                <VBox.margin>
                   <Insets bottom="5.0" />
                </VBox.margin></TextField>
-            <ListView fx:id="tfHkeyList" id="tfHkeyList" prefHeight="100.0" prefWidth="250.0" VBox.vgrow="ALWAYS" />
+            <ListView id="tfHkeyList" fx:id="tfHkeyList" prefHeight="100.0" prefWidth="250.0" VBox.vgrow="ALWAYS">
+               <contextMenu>
+                  <ContextMenu>
+                    <items>
+                      <MenuItem id="freshHKey" fx:id="freshHKey" mnemonicParsing="false" text="刷新" />
+                    </items>
+                  </ContextMenu>
+               </contextMenu></ListView>
          </children>
       </VBox>
-      <TextArea fx:id="taHValue" editable="false" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+      <TextArea fx:id="taHValue" editable="false" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+         <contextMenu>
+            <ContextMenu>
+              <items>
+                <MenuItem id="freshHContent" fx:id="freshHContent" mnemonicParsing="false" text="刷新" />
+              </items>
+            </ContextMenu>
+         </contextMenu></TextArea>
    </children>
 </HBox>
