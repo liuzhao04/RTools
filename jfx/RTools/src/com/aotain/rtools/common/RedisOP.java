@@ -64,10 +64,10 @@ public class RedisOP implements IRedisOP {
 	public List<String> hkeys(String key) {
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isBlank(key)) {
-			list.addAll(jedis.hkeys("*"));
+			return list;
 		} else {
 			key = key.trim();
-			list.addAll(jedis.hkeys("*" + key + "*"));
+			list.addAll(jedis.hkeys(key));
 		}
 		return list;
 	}
