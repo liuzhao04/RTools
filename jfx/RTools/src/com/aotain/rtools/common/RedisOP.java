@@ -77,4 +77,15 @@ public class RedisOP implements IRedisOP {
 		return jedis.hget(key, field);
 	}
 
+	@Override
+	public boolean isConnectRight() {
+		try {
+			jedis.ping();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }

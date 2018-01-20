@@ -55,5 +55,9 @@ public interface IRedisOP {
 	 */
 	public String hget(String key,String field);
 
-	
+	/**
+	 * 连接是否成功
+	 * @return
+	 */
+	public boolean isConnectRight();
 }
