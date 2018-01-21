@@ -32,8 +32,7 @@ public class RedisClusterOP implements IRedisOP {
 			jedisClusterNodes.add(new HostAndPort(host, Integer.parseInt(portArr[i])));
 			i++;
 		}
-		jc = new JedisCluster(jedisClusterNodes);
-		isConnectRight();
+		jc = new JedisCluster(jedisClusterNodes,2000); // 2秒钟超时
 	}
 
 	@Override

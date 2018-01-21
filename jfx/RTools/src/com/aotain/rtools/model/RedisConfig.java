@@ -9,14 +9,22 @@ package com.aotain.rtools.model;
 public class RedisConfig {
 	private String ipStrs;
 	private String portStrs;
+	private String cname;
+	private int id;
+	private boolean defaultSelected;
 
 	public RedisConfig(String ipStrs, String portStrs) {
 		this.ipStrs = ipStrs;
 		this.portStrs = portStrs;
 	}
 
-	private String name;
-	private int id;
+	public boolean isDefaultSelected() {
+		return defaultSelected;
+	}
+
+	public void setDefaultSelected(boolean defaultSelected) {
+		this.defaultSelected = defaultSelected;
+	}
 
 	public String getIpStrs() {
 		return ipStrs;
@@ -34,14 +42,6 @@ public class RedisConfig {
 		this.portStrs = portStrs;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -50,9 +50,43 @@ public class RedisConfig {
 		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return "RedisConfig [ipStrs=" + ipStrs + ", portStrs=" + portStrs + ", name=" + name + ", id=" + id + "]";
+	public String getCname() {
+		return cname;
 	}
 
+	public void setCname(String cname) {
+		this.cname = cname;
+	}
+
+	@Override
+	public String toString() {
+		return "RedisConfig [ipStrs=" + ipStrs + ", portStrs=" + portStrs + ", cname=" + cname + ", id=" + id
+				+ ", defaultSelected=" + defaultSelected + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cname == null) ? 0 : cname.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RedisConfig other = (RedisConfig) obj;
+		if (cname == null) {
+			if (other.cname != null)
+				return false;
+		} else if (!cname.equals(other.cname))
+			return false;
+		return true;
+	}
+	
 }

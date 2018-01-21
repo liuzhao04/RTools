@@ -17,7 +17,7 @@ public class RedisOP implements IRedisOP {
 	private Jedis jedis;
 
 	public RedisOP(String host, int port) {
-		jedis = new Jedis(host, port);
+		jedis = new Jedis(host, port,2000);
 	}
 
 	@Override
