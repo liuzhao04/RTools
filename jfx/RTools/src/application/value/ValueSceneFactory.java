@@ -9,8 +9,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aotain.rtools.common.IRedisOP;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.control.ContextMenuBuilder;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.MenuItemBuilder;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -26,9 +31,9 @@ public class ValueSceneFactory {
 	//
 	private final static String STL_UNPORTED_DATA_TYPE_PANE = "-fx-control-inner-background:#ffffff;-fx-font-family: Consolas;-fx-font-size:16pt; -fx-text-fill: #ff0000; ";
 
-	public static Pane createStringPanel(IRedisOP rutils, String key) {
+	public static Pane createStringPanel(final IRedisOP rutils, final String key) {
 		HBox hbox = new HBox();
-		TextArea textArea = new TextArea();
+		final TextArea textArea = new TextArea();
 		textArea.setEditable(false);
 		hbox.getChildren().add(textArea);
 		HBox.setHgrow(textArea, Priority.ALWAYS);
@@ -44,6 +49,17 @@ public class ValueSceneFactory {
 			textArea.setText(text);
 		}
 		textArea.setWrapText(true);
+		textArea.setText(rutils.get(key));
+		
+		MenuItem mi = MenuItemBuilder.create().text("刷新").build();
+		javafx.scene.control.ContextMenu cm = ContextMenuBuilder.create().items(mi).build();
+		textArea.setContextMenu(cm);
+		mi.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				textArea.setText(rutils.get(key));
+			}
+		});
 		return hbox;
 	}
 

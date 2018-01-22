@@ -17,7 +17,7 @@ public class RedisOP implements IRedisOP {
 	private Jedis jedis;
 
 	public RedisOP(String host, int port) {
-		jedis = new Jedis(host, port);
+		jedis = new Jedis(host, port,2000);
 	}
 
 	@Override
@@ -64,10 +64,10 @@ public class RedisOP implements IRedisOP {
 	public List<String> hkeys(String key) {
 		List<String> list = new ArrayList<String>();
 		if (StringUtils.isBlank(key)) {
-			list.addAll(jedis.hkeys("*"));
+			return list;
 		} else {
 			key = key.trim();
-			list.addAll(jedis.hkeys("*" + key + "*"));
+			list.addAll(jedis.hkeys(key));
 		}
 		return list;
 	}
@@ -75,6 +75,17 @@ public class RedisOP implements IRedisOP {
 	@Override
 	public String hget(String key, String field) {
 		return jedis.hget(key, field);
+	}
+
+	@Override
+	public boolean isConnectRight() {
+		try {
+			jedis.ping();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

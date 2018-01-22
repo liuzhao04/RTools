@@ -32,7 +32,7 @@ public class RedisClusterOP implements IRedisOP {
 			jedisClusterNodes.add(new HostAndPort(host, Integer.parseInt(portArr[i])));
 			i++;
 		}
-		jc = new JedisCluster(jedisClusterNodes);
+		jc = new JedisCluster(jedisClusterNodes,2000); // 2秒钟超时
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class RedisClusterOP implements IRedisOP {
 
 	@Override
 	public String type(String key) {
-		if(StringUtils.isBlank(key)){
+		if (StringUtils.isBlank(key)) {
 			return null;
 		}
 		return jc.type(key);
@@ -85,7 +85,7 @@ public class RedisClusterOP implements IRedisOP {
 
 	@Override
 	public String get(String key) {
-		if(StringUtils.isBlank(key)){
+		if (StringUtils.isBlank(key)) {
 			return null;
 		}
 		return jc.get(key);
@@ -117,5 +117,17 @@ public class RedisClusterOP implements IRedisOP {
 	@Override
 	public String hget(String key, String field) {
 		return jc.hget(key, field);
+	}
+
+	@Override
+	public boolean isConnectRight() {
+		try {
+			jc.set("ping-test-key", "1111");
+			jc.get("ping-test-key");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
