@@ -97,6 +97,7 @@ public class HashValueController implements Initializable {
 				}
 			}
 		});
+		taHValue.setWrapText(true);
 	}
 
 	private void showAsType(String type) {

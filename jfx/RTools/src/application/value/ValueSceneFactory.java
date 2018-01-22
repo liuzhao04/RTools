@@ -3,8 +3,11 @@ package application.value;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.aotain.rtools.common.IRedisOP;
-import com.aotain.rtools.common.RedisUtils;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -29,7 +32,18 @@ public class ValueSceneFactory {
 		textArea.setEditable(false);
 		hbox.getChildren().add(textArea);
 		HBox.setHgrow(textArea, Priority.ALWAYS);
-		textArea.setText(rutils.get(key));
+		String text = rutils.get(key);
+		if (!StringUtils.isBlank(text)) {
+			try {
+				JSONObject obj = JSON.parseObject(text);
+				textArea.setText(JSON.toJSONString(obj, true));
+			} catch (Exception e) {
+				textArea.setText(text);
+			}
+		} else {
+			textArea.setText(text);
+		}
+		textArea.setWrapText(true);
 		return hbox;
 	}
 
@@ -59,13 +73,13 @@ public class ValueSceneFactory {
 		try {
 			URL location = ValueSceneFactory.class.getResource("HashValuePane.fxml");
 			FXMLLoader fxmlLoader = new FXMLLoader();
-	        fxmlLoader.setLocation(location);
-	        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
-	        Pane root =  (Pane) fxmlLoader.load(location.openStream());
-	        HashValueController control =(HashValueController)fxmlLoader.getController();
-	        control.setKey(key);
-	        control.setRutils(rutils);
-	        control.myInit();
+			fxmlLoader.setLocation(location);
+			fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+			Pane root = (Pane) fxmlLoader.load(location.openStream());
+			HashValueController control = (HashValueController) fxmlLoader.getController();
+			control.setKey(key);
+			control.setRutils(rutils);
+			control.myInit();
 			return root;
 		} catch (IOException e) {
 			e.printStackTrace();
