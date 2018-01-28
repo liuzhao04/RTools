@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import application.dialog.DialogOkController;
+import application.dialog.DialogOkOrCancleController;
+import application.dialog.DialogOkOrCancleController.ClickEvent;
 import application.value.ValueSceneFactory;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -101,6 +103,41 @@ public class FrameUtils {
 	
 	public static void alertOkError(String message,String button) {
 		alert("异常提示",message,button);
+	}
+	
+	/**
+	 * 弹出框
+	 * 
+	 * @param title
+	 * @param message
+	 */
+	public static void dialog(String title,String message, final ClickEvent okClickedEvent,String okText,String cancleText) {
+		final Stage window = new Stage();
+		window.setTitle(title);
+		// modality要使用Modality.APPLICATION_MODEL
+		window.initModality(Modality.APPLICATION_MODAL);
+		window.setResizable(false);
+		Parent root = null;
+		try {
+			URL location = ValueSceneFactory.class.getResource("/application/dialog/DialogOkOrCancle.fxml");
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(location);
+			fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+			root = (Pane) fxmlLoader.load(location.openStream());
+			DialogOkOrCancleController control = (DialogOkOrCancleController) fxmlLoader.getController();
+			control.init(message,okClickedEvent,okText,cancleText,window);
+			Scene scene = new Scene(root);
+			window.setScene(scene);
+			// 使用showAndWait()先处理这个窗口，而如果不处理，main中的那个窗口不能响应
+			window.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void dialogOkCancle(String message,ClickEvent ce) {
+		dialog("系统提示",message,ce,"确定","取消");
 	}
 	
 	public static void showWindow(String title, Parent root) {

@@ -16,12 +16,12 @@
          <children>
             <FlowPane prefHeight="34.0" prefWidth="400.0" rowValignment="TOP">
                <children>
-                  <Button mnemonicParsing="false" text="删除">
+                  <Button mnemonicParsing="false" text="删除" fx:id="delButton">
                      <FlowPane.margin>
                         <Insets left="10.0" top="5.0" />
                      </FlowPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="新增">
+                  <Button mnemonicParsing="false" text="新增" fx:id="addButton">
                      <FlowPane.margin>
                         <Insets left="10.0" top="5.0" />
                      </FlowPane.margin>

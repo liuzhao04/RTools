@@ -16,10 +16,14 @@ import javafx.stage.Stage;
  * @author Administrator
  *
  */
-public class DialogOkController implements Initializable {
+public class DialogOkOrCancleController implements Initializable {
 
 	@FXML
 	private Button buttonOk;
+
+	@FXML
+	private Button buttonCancle;
+	
 	
 	@FXML
 	private TextArea textArea;
@@ -29,11 +33,21 @@ public class DialogOkController implements Initializable {
 		
 	}
 	
-	public void init(String message,String buttonText,final Stage stage) {
-		buttonOk.setText(buttonText);
+	public void init(String message, final ClickEvent okClickedEvent,String okText,String cancleText,final Stage stage) {
+		buttonOk.setText(okText);
+		buttonCancle.setText(cancleText);
 		textArea.setText(message);
 		
 		buttonOk.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				okClickedEvent.onClick(DialogOkOrCancleController.this.buttonOk);
+				stage.close();
+			}
+		});
+		
+		buttonCancle.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent event) {
@@ -42,4 +56,7 @@ public class DialogOkController implements Initializable {
 		});
 	}
 
+	public interface ClickEvent{
+		public void onClick(Button button);
+	}
 }

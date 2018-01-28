@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.dialog.DialogOkOrCancleController">
+   <children>
+      <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" />
+      <FlowPane alignment="CENTER_RIGHT" columnHalignment="CENTER" prefHeight="106.0" prefWidth="400.0">
+         <children>
+            <Button fx:id="buttonOk" mnemonicParsing="false" text="Button" />
+            <Button fx:id="buttonCancle" mnemonicParsing="false" text="Button" />
+         </children>
+      </FlowPane>
+   </children>
+</VBox>
