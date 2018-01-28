@@ -3,9 +3,11 @@ package application.value;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.aotain.rtools.common.IRedisOP;
-import com.aotain.rtools.common.RedisUtils;
-import com.sun.webkit.ContextMenu;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,7 +17,6 @@ import javafx.scene.control.ContextMenuBuilder;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.MenuItemBuilder;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCodeCombinationBuilder;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -36,6 +37,18 @@ public class ValueSceneFactory {
 		textArea.setEditable(false);
 		hbox.getChildren().add(textArea);
 		HBox.setHgrow(textArea, Priority.ALWAYS);
+		String text = rutils.get(key);
+		if (!StringUtils.isBlank(text)) {
+			try {
+				JSONObject obj = JSON.parseObject(text);
+				textArea.setText(JSON.toJSONString(obj, true));
+			} catch (Exception e) {
+				textArea.setText(text);
+			}
+		} else {
+			textArea.setText(text);
+		}
+		textArea.setWrapText(true);
 		textArea.setText(rutils.get(key));
 		
 		MenuItem mi = MenuItemBuilder.create().text("刷新").build();
@@ -76,13 +89,13 @@ public class ValueSceneFactory {
 		try {
 			URL location = ValueSceneFactory.class.getResource("HashValuePane.fxml");
 			FXMLLoader fxmlLoader = new FXMLLoader();
-	        fxmlLoader.setLocation(location);
-	        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
-	        Pane root =  (Pane) fxmlLoader.load(location.openStream());
-	        HashValueController control =(HashValueController)fxmlLoader.getController();
-	        control.setKey(key);
-	        control.setRutils(rutils);
-	        control.myInit();
+			fxmlLoader.setLocation(location);
+			fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+			Pane root = (Pane) fxmlLoader.load(location.openStream());
+			HashValueController control = (HashValueController) fxmlLoader.getController();
+			control.setKey(key);
+			control.setRutils(rutils);
+			control.myInit();
 			return root;
 		} catch (IOException e) {
 			e.printStackTrace();

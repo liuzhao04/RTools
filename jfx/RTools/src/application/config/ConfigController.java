@@ -110,8 +110,16 @@ public class ConfigController implements Initializable {
 	private List<String> toListData() {
 		List<String> list = new ArrayList<String>();
 		int i = 1;
+		String selStr = null;
+		boolean hasUsed = false;
 		for (RedisConfig rc : this.rlist) {
-			list.add(i + " - " + rc.getCname());
+			if(!hasUsed && rc.isDefaultSelected()){
+				selStr = "(default)";
+				hasUsed = true;
+			}else{
+				selStr = null;
+			}
+			list.add(i + " - " + rc.getCname() + (selStr==null?"":selStr));
 			i++;
 		}
 		return list;

@@ -86,7 +86,9 @@ public class MainController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				RedisConfig rc = getRedisConfigByIndex(newValue.intValue());
-				redisOP.destory();
+				if(redisOP != null){
+					redisOP.destory();
+				}
 				jtfKeysFilter.clear();
 				resetCluster(rc);
 				List<String> keys = redisOP.keys(null);
@@ -153,10 +155,12 @@ public class MainController implements Initializable {
 				valuePane.setDisable(false);
 			} else {
 				FrameUtils.alertOkError("集群连接失败："+rc.getCname());
+				redisOP = null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FrameUtils.alertOkError("集群连接失败："+rc.getCname()+", "+e.getMessage());
+			redisOP = null;
 		}
 	}
 
@@ -179,6 +183,7 @@ public class MainController implements Initializable {
 		rc2.setCname("测试集群");
 		rlist.add(rc1);
 		rlist.add(rc2);
+		ConfigHelper.save(rlist);
 		return rlist;
 	}
 
@@ -241,6 +246,9 @@ public class MainController implements Initializable {
 	}
 
 	private void initKeysFilter() {
+		if(redisOP == null){
+			return;
+		}
 		List<String> keys = redisOP.keys(null);
 		ObservableList<String> strList = FXCollections.observableArrayList(keys);
 		listKeys.setItems(strList);
