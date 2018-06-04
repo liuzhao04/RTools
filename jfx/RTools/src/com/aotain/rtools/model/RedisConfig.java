@@ -17,6 +17,11 @@ public class RedisConfig {
 		this.ipStrs = ipStrs;
 		this.portStrs = portStrs;
 	}
+	
+	public void addIpAndPort(String ip,String port){
+		this.ipStrs += "," + ip;
+		this.portStrs += "," + port;
+	}
 
 	public boolean isDefaultSelected() {
 		return defaultSelected;
@@ -89,4 +94,40 @@ public class RedisConfig {
 		return true;
 	}
 	
+	/**
+	 * 对象是否被改变
+	 * @param other
+	 * @return 已改变返回true，否则返回false
+	 */
+	public boolean isChanged(RedisConfig other) {
+		if(this.id != other.id){
+			return true;
+		}
+		
+		if(!cname.equals(other.cname)){
+			return true; 
+		}
+		
+		if(!ipStrs.equals(other.ipStrs)){
+			return true;
+		}
+		
+		if(!portStrs.equals(other.portStrs)){
+			return true;
+		}
+		
+		if(defaultSelected != other.defaultSelected){
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public RedisConfig clone(){
+		RedisConfig rc = new RedisConfig(this.ipStrs, this.portStrs);
+		rc.cname = this.cname;
+		rc.id = this.id;
+		rc.defaultSelected = this.defaultSelected;
+		return rc;
+	}
 }

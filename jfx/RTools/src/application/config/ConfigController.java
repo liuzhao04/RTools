@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.aotain.rtools.model.RedisConfig;
 import com.aotain.rtools.utils.ConfigHelper;
 import com.aotain.rtools.utils.FrameUtils;
@@ -22,7 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.util.Callback;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
 /**
  * 配置管理控制器
@@ -66,6 +68,8 @@ public class ConfigController implements Initializable {
 	
 	private boolean isLock = true;				// 集群管理锁：默认锁住(不可修改新增)
 	
+	private RedisConfig editCache = null;		// 编辑区的缓存
+	private boolean isEditMode = false;			// 编辑模式标志：true表示正在编辑，否则为新建模式
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -90,8 +94,13 @@ public class ConfigController implements Initializable {
 				}
 				// 1. 获取选中数据
 				selectedItem = ConfigController.this.rlist.get(newValue.intValue());
+				// 重置管理界面
+				resetManagerView();
 				// 2. 更新界面
 				updateSelectedItemInfo();
+				// 3. 刷新缓存对象
+				editCache = selectedItem;
+				isEditMode = true;
 			}
 		});
 		
@@ -125,9 +134,11 @@ public class ConfigController implements Initializable {
 					
 					@Override
 					public void onClick(Button button) {
-						// TODO:重新加载下拉菜单就行
 						ConfigController.this.rlist.remove(selectedItem);
 						ConfigHelper.save(ConfigController.this.rlist);
+						clusterList.getItems().remove(clusterList.getSelectionModel().getSelectedIndex());
+						// TODO:重新加载下拉菜单就行
+						
 					}
 				});
 
@@ -139,7 +150,92 @@ public class ConfigController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
+				RedisConfig rc = obtainRedisConfig();
+				String error = null;
+				// 基础格式校验
+				if((error = validateBasic(rc)) != null){
+					FrameUtils.alertOkError(error);
+					return;
+				}
+				// 编辑模式，用当前模式与缓存中的进行对比
+				if(isEditMode){
+					rc.setId(editCache.getId());
+					rc.setDefaultSelected(editCache.isDefaultSelected());
+					if(!editCache.isChanged(rc)){
+						FrameUtils.alertOkError("当前集群配置无修改");
+						return;
+					}
+					// 提交修改参数
+					editCache.setCname(rc.getCname());
+					editCache.setIpStrs(rc.getIpStrs());
+					editCache.setPortStrs(rc.getPortStrs());
+					int index = ConfigHelper.getIndex(ConfigController.this.rlist, editCache);
+					clusterList.getItems().set(index, (index+1)+"-"+rc.getCname());
+					FrameUtils.alertOkWarn("修改成功");
+				}else{
+					editCache = rc;
+					ConfigController.this.rlist.add(editCache);
+					// 刷新ClusterList
+					int size = clusterList.getItems().size();
+					clusterList.getItems().add((size+1)+"-"+rc.getCname());
+					FrameUtils.alertOkWarn("新增成功");
+				}
+			}
+			
+		});
+		
+		// 新增或者修改一个节点的信息
+		nodeAddButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				int index = clusterNodeList.getSelectionModel().getSelectedIndex();
+				List<String> items = clusterNodeList.getItems();
+				String selectedItem = null;
+				if(index >= 0){
+					selectedItem = items.get(index);
+				}
+				String ip = clusterNodeIp.getText();
+				String port = clusterNodePort.getText();
+				String error = null;
+				if((error = validateIp(ip)) != null){
+					FrameUtils.alertOkError(error);
+					return;
+				}
+				if((error = validatePort(port)) != null){
+					FrameUtils.alertOkError(error);
+					return;
+				}
 				
+				String destStr = ip.trim()+":"+port.trim();
+				if(selectedItem != null && selectedItem.equals(destStr)){
+					FrameUtils.alertOkWarn("无修改");
+					return;
+				}
+				
+				if(items!=null && items.contains(destStr)){
+					FrameUtils.alertOkError("节点已存在："+destStr);
+					return;
+				}
+				
+				if(selectedItem == null) {
+					// 新增节点
+					if(clusterNodeList.getItems() ==null){
+						clusterNodeList.setItems(FXCollections.observableArrayList(destStr));
+					}else{
+						clusterNodeList.getItems().add(destStr);
+					}
+					// 缓存对象更新IP值
+					editCache.addIpAndPort(ip.trim(), port.trim());
+					
+				}else{
+					// 修改节点
+					clusterNodeList.getItems().set(index,destStr);
+					// 更新缓存对象
+					String[] ipAndPort =  obtainIpAndPort();
+					editCache.setIpStrs(ipAndPort[0]);
+					editCache.setPortStrs(ipAndPort[1]);
+				}
 			}
 			
 		});
@@ -168,6 +264,41 @@ public class ConfigController implements Initializable {
 				setDefaultCluster();
 			}
 		});
+	}
+	
+	private String validateBasic(RedisConfig rc) {
+		if(StringUtils.isBlank(rc.getCname())){
+			return "集群名称为空";
+		}
+		if(StringUtils.isBlank(rc.getIpStrs())){
+			return "IP为空";
+		}
+		if(StringUtils.isBlank(rc.getPortStrs())){
+			return "端口为空";
+		}
+		return null;
+	}
+	
+	private String validateIp(String ip) {
+		if (StringUtils.isBlank(ip)) {
+			return "IP为空";
+		}
+		String ip_ = ip.trim();
+		if (!ip_.matches("^\\d{1,3}\\.\\d{1,3}.\\d{1,3}.\\d{1,3}$")) {
+			return "非法IP：" + ip_;
+		}
+		return null;
+	}
+
+	private String validatePort(String port) {
+		if (StringUtils.isBlank(port)) {
+			return "端口为空";
+		}
+		String port_ = port;
+		if (!port_.matches("^\\d+$")) {
+			return "非法端口：" + port_;
+		}
+		return null;
 	}
 
 	private void updateSelectedItemInfo() {
@@ -220,7 +351,40 @@ public class ConfigController implements Initializable {
 		clusterNodeList.getSelectionModel().clearSelection();
 		clusterNodeList.setItems(null); 
 		clusterNodeList.setItems(clusterNodeList.getItems());
+		clusterName.setText("");
 		// 重置缓存数据
+		editCache = obtainRedisConfig(); 
+		isEditMode = false;
+	}
+	
+	private String[] obtainIpAndPort(){
+		StringBuilder ipSb = new StringBuilder();
+		StringBuilder portSb = new StringBuilder();	
+		if(clusterNodeList.getItems() != null){
+			for(String item : clusterNodeList.getItems()){
+				String[] it =  item.split(":");
+				if(ipSb.length() > 0){
+					ipSb.append(',');
+					portSb.append(',');
+				}
+				ipSb.append(it[0]);
+				portSb.append(it[1]);
+			}
+		}
+		return new String[]{ipSb.toString(),portSb.toString()};
+	}
+	
+	/**
+	 * 获取界面上的数据,构造一个配置对象
+	 * @return
+	 */
+	private RedisConfig obtainRedisConfig(){
+		String[] ipAndPort = obtainIpAndPort();
+		RedisConfig rc = new RedisConfig(ipAndPort[0],ipAndPort[1]);
+		rc.setCname(clusterName.getText());
+		rc.setId(ConfigHelper.getIndex(ConfigController.this.rlist, rc));
+		rc.setDefaultSelected(false);
+		return rc;
 	}
 
 	private void lockManagerView(){
@@ -229,6 +393,7 @@ public class ConfigController implements Initializable {
 		clusterNodeList.setDisable(true);
 		clusterNodeIp.setText("");
 		clusterNodePort.setText("");
+		clusterName.setText("");
 		clusterNodeIp.setDisable(true);
 		clusterNodePort.setDisable(true);
 		addButton.setDisable(true);
@@ -242,6 +407,9 @@ public class ConfigController implements Initializable {
 		clusterNodeList.getSelectionModel().clearSelection();
 		clusterNodeList.setItems(null); 
 		clusterNodeList.setItems(clusterNodeList.getItems());
+		// 重置缓存数据
+		editCache = obtainRedisConfig(); 
+		isEditMode = false;
 	}
 	
 	private void unlockManagerView(){

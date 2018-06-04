@@ -10,13 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.event.ListSelectionEvent;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aotain.rtools.model.RedisConfig;
-import com.sun.org.omg.CORBA.RepositoryIdSeqHelper;
 
 /**
  * 配置管理工具
@@ -147,6 +144,24 @@ public class ConfigHelper {
 	 */
 	public static int getIndex(List<RedisConfig> list,RedisConfig rc) {
 		return list.indexOf(rc);
+	}
+	
+	/**
+	 * 获取下一个ID
+	 * @param list
+	 * @return
+	 */
+	public static int getNextId(List<RedisConfig> list){
+		if(null == list || list.size() == 0){
+			return 0;
+		}
+		int max = 0;
+		for(RedisConfig rc : list){
+			if(rc.getId() > max){
+				max = rc.getId();
+			}
+		}
+		return max + 1;
 	}
 
 	public static void main(String[] args) {
