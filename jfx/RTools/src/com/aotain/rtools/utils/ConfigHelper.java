@@ -76,6 +76,7 @@ public class ConfigHelper {
 				RedisConfig rc = obj.toJavaObject(RedisConfig.class);
 				rc.setCname(obj.getString("cname"));
 				rc.setDefaultSelected(obj.getBooleanValue("defaultSelected"));
+				rc.setId(obj.getIntValue("id"));
 				list.add(rc);
 			}
 			
@@ -149,7 +150,7 @@ public class ConfigHelper {
 	}
 
 	public static void main(String[] args) {
-		 List<RedisConfig> rlist = new ArrayList<RedisConfig>(); 
+		/* List<RedisConfig> rlist = new ArrayList<RedisConfig>(); 
 		 String host0 =
 		 "192.168.31.20"; String port0 = "8888"; RedisConfig rc0 = new
 		 RedisConfig(host0, port0); rc0.setId(1); rc0.setCname("UbuntuRedis"); String
@@ -160,7 +161,7 @@ public class ConfigHelper {
 		 "192.168.5.65,192.168.5.66,192.168.5.67,192.168.5.68,192.168.5.69,192.168.5.71";
 		 String port2 = "8000,8000,8000,8000,8000,8000"; RedisConfig rc2 = new
 		 RedisConfig(host2, port2); rc2.setId(3); rc2.setCname("测试集群"); rlist.add(rc0);
-		 rlist.add(rc1); rlist.add(rc2); save(rlist);
+		 rlist.add(rc1); rlist.add(rc2); save(rlist);*/
 
 		System.out.println(read());
 	}

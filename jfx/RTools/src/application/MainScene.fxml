@@ -16,7 +16,7 @@
                <children>
                   <Label layoutX="29.0" layoutY="23.0" text="集群选择：" />
                   <ChoiceBox id="selCluster" fx:id="selCluster" layoutX="89.0" layoutY="19.0" prefWidth="150.0" />
-                  <Button id="btnMgrCluster" fx:id="btnMgrCluster" layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
+                  <Button id="btnMgrCluster" fx:id="btnMgrCluster"  layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
                </children>
             </AnchorPane>
         </content>

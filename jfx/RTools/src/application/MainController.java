@@ -170,7 +170,7 @@ public class MainController implements Initializable {
 		RedisConfig rc0 = new RedisConfig(host0, port0);
 		rc0.setId(1);
 		rc0.setCname("UbuntuRedis");
-		rlist.add(rc0);
+//		rlist.add(rc0);
 		String host1 = "192.168.5.65,192.168.5.66,192.168.5.67,192.168.5.68,192.168.5.69,192.168.5.71";
 		String port1 = "7000,7000,7000,7000,7000,7000";
 		RedisConfig rc1 = new RedisConfig(host1, port1);
