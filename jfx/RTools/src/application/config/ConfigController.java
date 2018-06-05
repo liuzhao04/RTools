@@ -24,7 +24,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
 /**
  * 配置管理控制器
@@ -170,14 +169,14 @@ public class ConfigController implements Initializable {
 					editCache.setIpStrs(rc.getIpStrs());
 					editCache.setPortStrs(rc.getPortStrs());
 					int index = ConfigHelper.getIndex(ConfigController.this.rlist, editCache);
-					clusterList.getItems().set(index, (index+1)+"-"+rc.getCname());
+					clusterList.getItems().set(index, (index+1)+" - "+rc.getCname());
 					FrameUtils.alertOkWarn("修改成功");
 				}else{
 					editCache = rc;
 					ConfigController.this.rlist.add(editCache);
 					// 刷新ClusterList
 					int size = clusterList.getItems().size();
-					clusterList.getItems().add((size+1)+"-"+rc.getCname());
+					clusterList.getItems().add((size+1)+" - "+rc.getCname());
 					FrameUtils.alertOkWarn("新增成功");
 				}
 			}
@@ -225,16 +224,15 @@ public class ConfigController implements Initializable {
 					}else{
 						clusterNodeList.getItems().add(destStr);
 					}
-					// 缓存对象更新IP值
-					editCache.addIpAndPort(ip.trim(), port.trim());
-					
+					/*// 缓存对象更新IP值
+					editCache.addIpAndPort(ip.trim(), port.trim());*/
 				}else{
 					// 修改节点
 					clusterNodeList.getItems().set(index,destStr);
-					// 更新缓存对象
+					/*// 更新缓存对象
 					String[] ipAndPort =  obtainIpAndPort();
 					editCache.setIpStrs(ipAndPort[0]);
-					editCache.setPortStrs(ipAndPort[1]);
+					editCache.setPortStrs(ipAndPort[1]);*/
 				}
 			}
 			
@@ -382,7 +380,7 @@ public class ConfigController implements Initializable {
 		String[] ipAndPort = obtainIpAndPort();
 		RedisConfig rc = new RedisConfig(ipAndPort[0],ipAndPort[1]);
 		rc.setCname(clusterName.getText());
-		rc.setId(ConfigHelper.getIndex(ConfigController.this.rlist, rc));
+//		rc.setId(ConfigHelper.getIndex(ConfigController.this.rlist, rc));
 		rc.setDefaultSelected(false);
 		return rc;
 	}
@@ -408,6 +406,7 @@ public class ConfigController implements Initializable {
 		clusterNodeList.setItems(null); 
 		clusterNodeList.setItems(clusterNodeList.getItems());
 		// 重置缓存数据
+		if(!isEditMode)
 		editCache = obtainRedisConfig(); 
 		isEditMode = false;
 	}
