@@ -134,6 +134,7 @@
 			name="RTools"
 			mainClass="application.Main"
 			toolkit="fx"
+			version="2.0"
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
