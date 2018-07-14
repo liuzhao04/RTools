@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="ASCII"?>
-<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build">
-  <deploy packagingFormat="exe" verbose="true">
-    <application name="HelloJFX" mainclass="application.Main" version="v1.0"/>
-    <info title="RTools" vendor="liuz@aotain.com"/>
+<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build" cssToBin="true">
+  <deploy packagingFormat="exe" proxyResolution="true">
+    <application name="HelloJFX" mainclass="application.Main" version="v2.0" toolkit="fx"/>
+    <info title="RTools" vendor="AotainTools"/>
   </deploy>
   <signjar/>
+  <manifestEntries name="Manifest-Version" value="1.0"/>
+  <manifestEntries name="Bundle-ManifestVersion" value="2"/>
+  <manifestEntries name="App-Version" value="v2.0"/>
+  <manifestEntries name="App-Name" value="RTools"/>
 </anttasks:AntTask>

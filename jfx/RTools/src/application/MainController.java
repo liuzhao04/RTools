@@ -70,6 +70,8 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Button btnMgrCluster;
+	
+	private int rlistHashCode = -1;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -133,14 +135,52 @@ public class MainController implements Initializable {
 					fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
 					root = (Pane) fxmlLoader.load(location.openStream());
 					ConfigController control = (ConfigController) fxmlLoader.getController();
+					rlistHashCode = MainController.this.hashCode(rlist);
 					control.init(rlist);
-					FrameUtils.showWindow("集群配置管理", root);
+					FrameUtils.showWindow("集群配置管理", root,new CloseMgrClusterHandler(control));
 				} catch (IOException e) {
 					FrameUtils.alertOkError("集群配置管理加载失败：" + e.getMessage(),"确定");
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	private int hashCode(List<RedisConfig> rlist) {
+		int code = 0;
+		for(RedisConfig rc : rlist){
+			code += rc.calcHashCode();
+		}
+		return code;
+	}
+	
+	private boolean isConfigListChanged() {
+		return rlistHashCode != hashCode(this.rlist);  
+	}
+	
+	/**
+	 * 集群管理界面关闭事件
+	 * 
+	 * @author liuz@aotian.com
+	 * @date 2018年7月13日 下午2:00:59
+	 */
+	private class CloseMgrClusterHandler implements EventHandler<javafx.stage.WindowEvent>  {
+		
+		private ConfigController controller = null;
+
+		public CloseMgrClusterHandler(ConfigController control) {
+			this.controller = control;
+		}
+
+		@Override
+		public void handle(javafx.stage.WindowEvent event) {
+			if(controller != null){
+				if(isConfigListChanged()){
+					FrameUtils.alertOkWarn("配置已修改，手动重启后生效！");
+				}
+			}
+		}
+		
 	}
 
 	private void resetCluster(RedisConfig rc) {

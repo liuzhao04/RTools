@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/application/application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="/application/application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <top>
       <TitledPane animated="false" text="集群参数" BorderPane.alignment="CENTER">
         <content>
@@ -16,14 +16,14 @@
                <children>
                   <Label layoutX="29.0" layoutY="23.0" text="集群选择：" />
                   <ChoiceBox id="selCluster" fx:id="selCluster" layoutX="89.0" layoutY="19.0" prefWidth="150.0" />
-                  <Button id="btnMgrCluster" fx:id="btnMgrCluster"  layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
+                  <Button id="btnMgrCluster" fx:id="btnMgrCluster" layoutX="255.0" layoutY="19.0" mnemonicParsing="false" text="管理集群" />
                </children>
             </AnchorPane>
         </content>
       </TitledPane>
    </top>
    <center>
-      <BorderPane id="bodyPaneCenter" fx:id="valuePane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <BorderPane id="bodyPaneCenter" fx:id="valuePane" prefHeight="514.0" prefWidth="543.0" BorderPane.alignment="CENTER">
          <top>
             <TitledPane animated="false" text="Content" BorderPane.alignment="CENTER">
               <content>
@@ -41,14 +41,14 @@
       </BorderPane>
    </center>
    <left>
-      <HBox id="bodyPaneWest" fx:id="bodyPaneWest" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox id="bodyPaneWest" fx:id="bodyPaneWest" prefHeight="514.0" prefWidth="269.0" BorderPane.alignment="CENTER">
          <children>
             <BorderPane prefHeight="335.0" prefWidth="265.0">
                <top>
-                  <TextField id="jtfKeysFilter" fx:id="jtfKeysFilter" />
+                  <TextField id="jtfKeysFilter" fx:id="jtfKeysFilter" prefHeight="23.0" prefWidth="288.0" />
                </top>
                <center>
-                  <ListView id="listKeys" fx:id="listKeys" prefHeight="239.0" prefWidth="248.0" BorderPane.alignment="CENTER">
+                  <ListView id="listKeys" fx:id="listKeys" prefHeight="491.0" prefWidth="294.0" BorderPane.alignment="CENTER">
                      <contextMenu>
                         <ContextMenu>
                           <items>

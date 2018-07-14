@@ -13,6 +13,10 @@ public class RedisConfig {
 	private int id;
 	private boolean defaultSelected;
 
+	public RedisConfig(){
+		
+	}
+	
 	public RedisConfig(String ipStrs, String portStrs) {
 		this.ipStrs = ipStrs;
 		this.portStrs = portStrs;
@@ -67,6 +71,18 @@ public class RedisConfig {
 	public String toString() {
 		return "RedisConfig [ipStrs=" + ipStrs + ", portStrs=" + portStrs + ", cname=" + cname + ", id=" + id
 				+ ", defaultSelected=" + defaultSelected + "]";
+	}
+	
+
+	public int calcHashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cname == null) ? 0 : cname.hashCode());
+		result = prime * result + (defaultSelected ? 1231 : 1237);
+		result = prime * result + id;
+		result = prime * result + ((ipStrs == null) ? 0 : ipStrs.hashCode());
+		result = prime * result + ((portStrs == null) ? 0 : portStrs.hashCode());
+		return result;
 	}
 
 	@Override

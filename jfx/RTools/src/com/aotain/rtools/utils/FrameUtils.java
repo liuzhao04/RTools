@@ -6,17 +6,21 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URL;
 
+import application.Main;
 import application.dialog.DialogOkController;
 import application.dialog.DialogOkOrCancleController;
 import application.dialog.DialogOkOrCancleController.ClickEvent;
 import application.value.ValueSceneFactory;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * 界面工具箱
@@ -71,6 +75,7 @@ public class FrameUtils {
 		// modality要使用Modality.APPLICATION_MODEL
 		window.initModality(Modality.APPLICATION_MODAL);
 		window.setResizable(false);
+		window.getIcons().add(new Image(Main.class.getResourceAsStream(Main.getIconPath())));
 		Parent root = null;
 		try {
 			URL location = ValueSceneFactory.class.getResource("/application/dialog/DialogOk.fxml");
@@ -114,6 +119,7 @@ public class FrameUtils {
 	public static void dialog(String title,String message, final ClickEvent okClickedEvent,String okText,String cancleText) {
 		final Stage window = new Stage();
 		window.setTitle(title);
+		window.getIcons().add(new Image(Main.class.getResourceAsStream(Main.getIconPath())));
 		// modality要使用Modality.APPLICATION_MODEL
 		window.initModality(Modality.APPLICATION_MODAL);
 		window.setResizable(false);
@@ -140,13 +146,17 @@ public class FrameUtils {
 		dialog("系统提示",message,ce,"确定","取消");
 	}
 	
-	public static void showWindow(String title, Parent root) {
+	public static void showWindow(String title, Parent root,EventHandler<WindowEvent> e) {
 		final Stage window = new Stage();
+		window.getIcons().add(new Image(Main.class.getResourceAsStream(Main.getIconPath())));
 		window.setTitle(title);
 		// modality要使用Modality.APPLICATION_MODEL
 		window.initModality(Modality.APPLICATION_MODAL);
 		Scene scene = new Scene(root);
 		window.setScene(scene);
+		if(e != null){
+			window.setOnCloseRequest(e);
+		}
 		// 使用showAndWait()先处理这个窗口，而如果不处理，main中的那个窗口不能响应
 		window.showAndWait();
 	}
