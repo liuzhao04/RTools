@@ -5,7 +5,6 @@
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
 				<file name="${java.home}\lib\jfxrt.jar"/>
-				<file name="${basedir}"/>
 			</filelist>
 		</path>
 	
@@ -134,7 +133,6 @@
 			name="RTools"
 			mainClass="application.Main"
 			toolkit="fx"
-			version="v2.0"
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
@@ -150,10 +148,10 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="AotainTools"/>
 				<attribute name="Implementation-Title" value="RTools"/>
-				<attribute name="Implementation-Version" value="v2.0"/>
-				<attribute name="Manifest-Version" value="v2.0"/>
+				<attribute name="Implementation-Version" value="v2.1"/>
+				<attribute name="Manifest-Version" value="1.0"/>
 				<attribute name="Bundle-ManifestVersion" value="2"/>
-				<attribute name="App-Version" value="v2.0"/>
+				<attribute name="App-Version" value="v2.1"/>
 				<attribute name="App-Name" value="RTools"/>
 			</manifest>
 		</fx:jar>
