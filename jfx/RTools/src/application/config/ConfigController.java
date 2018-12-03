@@ -61,6 +61,10 @@ public class ConfigController implements Initializable {
 	private Label label_2;
 	@FXML
 	private Label label_3;
+	@FXML
+	private Label label_4;
+	@FXML
+	private TextField clusterPwd;
 
 	private List<RedisConfig> rlist;			// redis集群配置
 	private RedisConfig selectedItem = null;	// 当前被选中的集群
@@ -117,6 +121,7 @@ public class ConfigController implements Initializable {
 				// 2. 更新界面
 				 clusterNodeIp.setText(selItems[0]);
 				 clusterNodePort.setText(selItems[1]);
+				 clusterPwd.setText(selectedItem.getPassword());
 			}
 		});
 
@@ -168,6 +173,7 @@ public class ConfigController implements Initializable {
 					editCache.setCname(rc.getCname());
 					editCache.setIpStrs(rc.getIpStrs());
 					editCache.setPortStrs(rc.getPortStrs());
+					editCache.setPassword(rc.getPassword());
 					int index = ConfigHelper.getIndex(ConfigController.this.rlist, editCache);
 					clusterList.getItems().set(index, (index+1)+" - "+rc.getCname());
 					FrameUtils.alertOkWarn("修改成功");
@@ -196,6 +202,7 @@ public class ConfigController implements Initializable {
 				}
 				String ip = clusterNodeIp.getText();
 				String port = clusterNodePort.getText();
+				String password = clusterPwd.getText();
 				String error = null;
 				if((error = validateIp(ip)) != null){
 					FrameUtils.alertOkError(error);
@@ -208,8 +215,12 @@ public class ConfigController implements Initializable {
 				
 				String destStr = ip.trim()+":"+port.trim();
 				if(selectedItem != null && selectedItem.equals(destStr)){
-					FrameUtils.alertOkWarn("无修改");
-					return;
+					String orgpwd = ConfigController.this.selectedItem.getPassword();
+					if(orgpwd == null && orgpwd == password || orgpwd != null && orgpwd.equals(password)) {
+						FrameUtils.alertOkWarn("无修改");	
+						return;
+					}
+					ConfigController.this.selectedItem.setPassword(password);
 				}
 				
 				if(items!=null && items.contains(destStr)){
@@ -343,6 +354,7 @@ public class ConfigController implements Initializable {
 		// 重置管理界面
 		clusterNodeIp.setText("");
 		clusterNodePort.setText("");
+		clusterPwd.setText("");
 		if(clusterNodeList.getItems() != null){
 			clusterNodeList.getItems().clear();
 		}
@@ -382,6 +394,7 @@ public class ConfigController implements Initializable {
 		rc.setCname(clusterName.getText());
 //		rc.setId(ConfigHelper.getIndex(ConfigController.this.rlist, rc));
 		rc.setDefaultSelected(false);
+		rc.setPassword(clusterPwd.getText());
 		return rc;
 	}
 
@@ -391,9 +404,11 @@ public class ConfigController implements Initializable {
 		clusterNodeList.setDisable(true);
 		clusterNodeIp.setText("");
 		clusterNodePort.setText("");
+		clusterPwd.setText("");
 		clusterName.setText("");
 		clusterNodeIp.setDisable(true);
 		clusterNodePort.setDisable(true);
+		clusterPwd.setDisable(true);
 		addButton.setDisable(true);
 		resetManagerViewButton.setDisable(true);
 		lockButton.setText("解锁");
@@ -401,6 +416,7 @@ public class ConfigController implements Initializable {
 		label_1.setDisable(true);
 		label_2.setDisable(true);
 		label_3.setDisable(true);
+		label_4.setDisable(true);
 		isLock = true;
 		clusterNodeList.getSelectionModel().clearSelection();
 		clusterNodeList.setItems(null); 
@@ -417,6 +433,7 @@ public class ConfigController implements Initializable {
 		clusterNodeList.setDisable(false);
 		clusterNodeIp.setDisable(false);
 		clusterNodePort.setDisable(false);
+		clusterPwd.setDisable(false);
 		addButton.setDisable(false);
 		resetManagerViewButton.setDisable(false);
 		lockButton.setText("锁定");
@@ -424,6 +441,7 @@ public class ConfigController implements Initializable {
 		label_1.setDisable(false);
 		label_2.setDisable(false);
 		label_3.setDisable(false);
+		label_4.setDisable(false);
 		isLock = false;
 	}
 	

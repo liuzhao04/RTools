@@ -43,9 +43,11 @@
                   <TextField id="clusterNodeIp" fx:id="clusterNodeIp" layoutX="62.0" layoutY="129.0" />
                   <Label id="label_1" fx:id="label_1" alignment="CENTER_RIGHT" layoutX="17.0" layoutY="164.0" minWidth="35.0" text="端口：" />
                   <TextField id="clusterNodePort" fx:id="clusterNodePort" layoutX="63.0" layoutY="157.0" />
-                  <Button id="nodeAddButton" fx:id="nodeAddButton" layoutX="138.0" layoutY="191.0" mnemonicParsing="false" text="节点修改" />
+                  <Button id="nodeAddButton" fx:id="nodeAddButton" layoutX="138.0" layoutY="217.0" mnemonicParsing="false" text="节点修改" />
                   <Button layoutX="9.0" layoutY="4.0" mnemonicParsing="false" text="节点删除" />
                   <Separator layoutY="40.0" prefWidth="212.0" />
+                  <TextField id="clusterPwd" fx:id="clusterPwd" layoutX="63.0" layoutY="186.0" />
+                  <Label id="label_4" fx:id="label_4" alignment="CENTER_RIGHT" layoutX="17.0" layoutY="193.0" minWidth="35.0" text="密码：" />
                </children>
             </AnchorPane>
          </center>

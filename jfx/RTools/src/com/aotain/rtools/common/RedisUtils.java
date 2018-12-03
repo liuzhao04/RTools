@@ -17,6 +17,7 @@ import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Redis操作工具箱
@@ -30,7 +31,7 @@ public class RedisUtils {
 	private JedisCluster jc = null;
 	private Logger log = Logger.getLogger(RedisUtils.class);
 
-	public RedisUtils(String hosts, String ports) {
+	public RedisUtils(String hosts, String ports,String password) {
 		Set<HostAndPort> jedisClusterNodes = new HashSet<HostAndPort>();
 		String[] portArr = ports.split(",");
 		int i = 0;
@@ -38,8 +39,29 @@ public class RedisUtils {
 			jedisClusterNodes.add(new HostAndPort(host, Integer.parseInt(portArr[i])));
 			i++;
 		}
-		jc = new JedisCluster(jedisClusterNodes);
-
+		JedisPoolConfig jpc = getJedisPoolConfig();
+		if(password != null){
+			jc = new JedisCluster(jedisClusterNodes,10000,1000,1,password,jpc);
+		}else{
+			jc = new JedisCluster(jedisClusterNodes,jpc);
+		}
+	}
+	
+	private JedisPoolConfig getJedisPoolConfig() {
+		JedisPoolConfig jpc = new JedisPoolConfig();
+		jpc.setMaxIdle(30);
+		jpc.setMaxTotal(200);
+		jpc.setMinIdle(10);
+		jpc.setMaxWaitMillis(3000);
+		jpc.setNumTestsPerEvictionRun(100);
+		jpc.setTimeBetweenEvictionRunsMillis(3000);
+		jpc.setMinEvictableIdleTimeMillis(1800000);
+		jpc.setSoftMinEvictableIdleTimeMillis(10000);
+		jpc.setTestOnBorrow(true);
+		jpc.setTestWhileIdle(true);
+		jpc.setTestOnReturn(true);
+		jpc.setBlockWhenExhausted(false);
+		return jpc;
 	}
 	
 	/**
@@ -71,6 +93,15 @@ public class RedisUtils {
 	 */
 	public String type(String key) {
 		return jc.type(key);
+	}
+	
+	/**
+	 * 删除key
+	 * @param key
+	 * @return
+	 */
+	public Long del(String key) {
+		return jc.del(key);
 	}
 
 	/**

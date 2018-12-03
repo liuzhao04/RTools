@@ -12,19 +12,28 @@ public class RedisConfig {
 	private String cname;
 	private int id;
 	private boolean defaultSelected;
+	private String password;
 
-	public RedisConfig(){
-		
+	public RedisConfig() {
+
 	}
-	
+
 	public RedisConfig(String ipStrs, String portStrs) {
 		this.ipStrs = ipStrs;
 		this.portStrs = portStrs;
 	}
-	
-	public void addIpAndPort(String ip,String port){
+
+	public void addIpAndPort(String ip, String port) {
 		this.ipStrs += "," + ip;
 		this.portStrs += "," + port;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public boolean isDefaultSelected() {
@@ -70,9 +79,8 @@ public class RedisConfig {
 	@Override
 	public String toString() {
 		return "RedisConfig [ipStrs=" + ipStrs + ", portStrs=" + portStrs + ", cname=" + cname + ", id=" + id
-				+ ", defaultSelected=" + defaultSelected + "]";
+				+ ", defaultSelected=" + defaultSelected + ", password=" + password + "]";
 	}
-	
 
 	public int calcHashCode() {
 		final int prime = 31;
@@ -82,6 +90,7 @@ public class RedisConfig {
 		result = prime * result + id;
 		result = prime * result + ((ipStrs == null) ? 0 : ipStrs.hashCode());
 		result = prime * result + ((portStrs == null) ? 0 : portStrs.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		return result;
 	}
 
@@ -94,8 +103,7 @@ public class RedisConfig {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(Object obj) { if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
@@ -109,7 +117,7 @@ public class RedisConfig {
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * 对象是否被改变
 	 * @param other
@@ -135,15 +143,24 @@ public class RedisConfig {
 		if(defaultSelected != other.defaultSelected){
 			return true;
 		}
-		return false;
+		
+		if (password != null) {
+			if (other.password == null) {
+				return true;
+			}
+			return !password.equals(other.password);
+		} else {
+			return other.password != null;
+		}
 	}
-	
+
 	@Override
-	public RedisConfig clone(){
+	public RedisConfig clone() {
 		RedisConfig rc = new RedisConfig(this.ipStrs, this.portStrs);
 		rc.cname = this.cname;
 		rc.id = this.id;
 		rc.defaultSelected = this.defaultSelected;
+		rc.password = this.password;
 		return rc;
 	}
 }

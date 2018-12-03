@@ -74,6 +74,7 @@ public class ConfigHelper {
 				rc.setCname(obj.getString("cname"));
 				rc.setDefaultSelected(obj.getBooleanValue("defaultSelected"));
 				rc.setId(obj.getIntValue("id"));
+				rc.setPassword(obj.getString("password"));
 				list.add(rc);
 			}
 			

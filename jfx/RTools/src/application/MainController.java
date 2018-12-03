@@ -189,7 +189,7 @@ public class MainController implements Initializable {
 		valuePane.setDisable(true);
 
 		try {
-			redisOP = RedisOpFactory.createIRedisOP(rc.getIpStrs(), rc.getPortStrs());
+			redisOP = RedisOpFactory.createIRedisOP(rc.getIpStrs(), rc.getPortStrs(),rc.getPassword());
 			if (redisOP.isConnectRight()) {
 				bodyPaneWest.setDisable(false);
 				valuePane.setDisable(false);

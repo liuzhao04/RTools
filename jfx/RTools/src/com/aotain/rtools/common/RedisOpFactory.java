@@ -16,8 +16,8 @@ public class RedisOpFactory {
 	 *            端口
 	 * @return
 	 */
-	public static RedisOP createRedisOp(String host, int port) {
-		return new RedisOP(host, port);
+	public static RedisOP createRedisOp(String host, int port,String password) {
+		return new RedisOP(host, port,password);
 	}
 
 	/**
@@ -29,8 +29,8 @@ public class RedisOpFactory {
 	 *            端口，用","号分隔
 	 * @return
 	 */
-	public static RedisClusterOP createRedisClusterOP(String hosts, String ports) {
-		return new RedisClusterOP(hosts, ports);
+	public static RedisClusterOP createRedisClusterOP(String hosts, String ports,String password) {
+		return new RedisClusterOP(hosts, ports,password);
 	}
 
 	/**
@@ -39,11 +39,11 @@ public class RedisOpFactory {
 	 * @param ports
 	 * @return
 	 */
-	public static IRedisOP createIRedisOP(String hosts, String ports) {
+	public static IRedisOP createIRedisOP(String hosts, String ports,String password) {
 		if (hosts.contains(",")) {
-			return new RedisClusterOP(hosts, ports);
+			return new RedisClusterOP(hosts, ports,password);
 		} else {
-			return new RedisOP(hosts, Integer.parseInt(ports));
+			return new RedisOP(hosts, Integer.parseInt(ports),password);
 		}
 	}
 }

@@ -16,8 +16,11 @@ import redis.clients.jedis.Jedis;
 public class RedisOP implements IRedisOP {
 	private Jedis jedis;
 
-	public RedisOP(String host, int port) {
-		jedis = new Jedis(host, port,2000);
+	public RedisOP(String host, int port,String password) {
+		jedis = new Jedis(host, port,10000);
+		if(password != null){
+			jedis.auth(password);
+		}
 	}
 
 	@Override
